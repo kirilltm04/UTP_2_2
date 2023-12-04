@@ -9,11 +9,10 @@ public class Main {
         } catch (Exception exc) {
             System.out.println("Faulty constructor: " + exc);
         }
-        System.out.println(pl.arr);
-//        System.out.println("@1 Language Map:");
-//        pl.getLangsMap().forEach((k,v)->System.out.println(k+ " = " + v));
-//        System.out.println("@2 Programmers Map:");
-//        pl.getProgsMap().forEach((k,v)->System.out.println(k+ " = " + v));
+        System.out.println("@1 Language Map:");
+        pl.getLangsMap().forEach((k,v)->System.out.println(k+ " = " + v));
+        System.out.println("@2 Programmers Map:");
+        pl.getProgsMap().forEach((k,v)->System.out.println(k+ " = " + v));
 //        System.out.println("@3 Languages sorted by the number of programmers:");
 //        pl.getLangsMapSortedByNumOfProgs()
 //                .forEach((k,v)->System.out.println(k+ " = " + v));
