@@ -1,10 +1,11 @@
 import java.io.*;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class ProgLang {
     public LinkedHashMap<String, List<String>> map;
 
-    public LinkedHashMap<String, List<String>> reader(String path) throws FileNotFoundException {
+    public LinkedHashMap<String, List<String>> fileReader(String path) throws FileNotFoundException {
         File file = new File(path);
         Scanner sc = new Scanner(file);
         LinkedHashMap<String, List<String>> ans = new LinkedHashMap<>();
@@ -17,7 +18,7 @@ public class ProgLang {
     }
 
     public ProgLang(String path) throws FileNotFoundException {
-        this.map = reader(path);
+        this.map = fileReader(path);
     }
 
     public LinkedHashMap<String, List<String>> getLangsMap() {
@@ -50,8 +51,8 @@ public class ProgLang {
     public LinkedHashMap<String, List<String>> getLangsMapSortedByNumOfProgs() {
         LinkedHashMap<String, List<String>> sorted = new LinkedHashMap<>();
         this.map.entrySet().stream()
-                .sorted(Comparator.comparingInt(entry -> entry.getValue().size()))
-                .forEach(entry -> sorted.put(entry.getKey(), entry.getValue()));
+                .sorted(Comparator.comparingInt(m -> m.getValue().size()))
+                .forEach(m -> sorted.put(m.getKey(), m.getValue()));
         reversed(sorted);
         return sorted;
     }
@@ -61,8 +62,8 @@ public class ProgLang {
         LinkedHashMap<String, List<String>> sortedMap = new LinkedHashMap<>();
 
         progs.entrySet().stream()
-                .sorted(Comparator.comparingInt(entry -> entry.getValue().size()))
-                .forEach(entry -> sortedMap.put(entry.getKey(), entry.getValue()));
+                .sorted(Comparator.comparingInt(a -> a.getValue().size()))
+                .forEach(a-> sortedMap.put(a.getKey(), a.getValue()));
         reversed(sortedMap);
         return sortedMap;
     }
@@ -71,7 +72,19 @@ public class ProgLang {
         LinkedHashMap<String, List<String>> progs = getProgsMap();
         return progs.entrySet().stream()
                 .filter(entry -> entry.getValue().size() > num)
-                .collect(LinkedHashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue()), Map::putAll);
+                .collect(LinkedHashMap::new, (m, arr) -> m.put(arr.getKey(), arr.getValue()), Map::putAll);
+    }
+
+    public static <T, X> Map<T, X> sorted(Map<T, X> map, Comparator<Map.Entry<T, X>> comparator) {
+        return map.entrySet().stream()
+                .sorted(comparator)
+                .collect(LinkedHashMap::new, (m, arr) -> m.put(arr.getKey(), arr.getValue()), Map::putAll);
+    }
+
+    public static <T, X> Map<T, X> filtered(Map<T, X> map, Predicate<Map.Entry<T, X>> predicate) {
+        return map.entrySet().stream()
+                .filter(predicate)
+                .collect(LinkedHashMap::new, (m, arr) -> m.put(arr.getKey(), arr.getValue()), Map::putAll);
     }
 }
 
